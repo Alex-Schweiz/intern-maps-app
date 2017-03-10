@@ -11,7 +11,7 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        
+
       </ul>
     </div>
   </div>
@@ -21,9 +21,58 @@
   <div class="row">
     <div class="col-md-12">
       <div class="map">
-        <sebm-google-map [latitude]="lat" [longitude]="lng">
-          <sebm-google-map-marker [latitude]="lat" [longitude]="lng"></sebm-google-map-marker>
+        <sebm-google-map
+                [latitude]="lat"
+                [longitude]="lng"
+                [zoom]="zoom"
+                [disableDefaultUI]=false
+                [zoomControl]=false
+                (mapClick)="mapClicked($event)">
+
+          <sebm-google-map-marker
+                  *ngFor="let m of markers; let i = index"
+                  (markerClick)="clickedMarker(m,i)"
+                  [latitude]="m.lat"
+                  [longitude]="m.lng"
+                  [markerDraggable]="m.draggable"
+                  (dragEnd)="markerDragEnd(m, $event)">
+
+            <sebm-google-map-info-window>
+              <strong>{{m.name}}</strong>
+              <br>
+              <a class="delete" (click)="removeMarker(m)" >Delete</a>
+            </sebm-google-map-info-window>
+          </sebm-google-map-marker>
         </sebm-google-map>
+      </div>
+    </div>
+  </div>
+  <!-- Form to add a new marker -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Add a new marker </h3>
+        </div>
+        <div class="panel-body">
+          <form (submit)="addMarker()">
+            <label>Location Name</label>
+            <input type="text" [(ngModel)]="markerName" name="markerName" >
+
+            <label>Latitude</label>
+            <input type="text" [(ngModel)]="markerLat" name="markerLat" >
+
+            <label>Longitude</label>
+            <input type="text" [(ngModel)]="markerLng" name="markerLng" >
+
+            <label>Draggable</label>
+            <select type="text" [(ngModel)]="markerDraggable" name="markerDraggable" >
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>>
+            <input type="submit" value="Map it!">
+          </form>
+        </div>
       </div>
     </div>
   </div>
